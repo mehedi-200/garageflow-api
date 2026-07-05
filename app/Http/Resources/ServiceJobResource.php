@@ -19,6 +19,7 @@ class ServiceJobResource extends JsonResource
             'mechanic' => new UserResource($this->whenLoaded('mechanic')),
             'items' => ServiceItemResource::collection($this->whenLoaded('items')),
             'items_total' => $this->whenLoaded('items', fn () => (float) $this->items->sum('cost')),
+            'invoice' => new InvoiceResource($this->whenLoaded('invoice')),
             'created_at' => $this->created_at?->toDateTimeString(),
         ];
     }

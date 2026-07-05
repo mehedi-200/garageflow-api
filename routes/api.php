@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceItemController;
 use App\Http\Controllers\ServiceJobController;
@@ -30,5 +31,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('customers', CustomerController::class)->except(['index', 'show']);
         Route::apiResource('vehicles', VehicleController::class)->except(['index', 'show']);
         Route::apiResource('service-jobs', ServiceJobController::class)->only(['store', 'update']);
+
+        Route::apiResource('invoices', InvoiceController::class)->only(['index', 'show', 'update']);
+        Route::patch('/invoices/{invoice}/pay', [InvoiceController::class, 'pay']);
     });
 });

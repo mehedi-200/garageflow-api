@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable(['vehicle_id', 'mechanic_id', 'service_type', 'status', 'description', 'expected_delivery'])]
 class ServiceJob extends Model
@@ -55,5 +56,10 @@ class ServiceJob extends Model
     public function items(): HasMany
     {
         return $this->hasMany(ServiceItem::class);
+    }
+
+    public function invoice(): HasOne
+    {
+        return $this->hasOne(Invoice::class);
     }
 }

@@ -9,6 +9,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ServiceJobService
 {
+    public function __construct(private readonly InvoiceService $invoiceService)
+    {
+    }
+
     /**
      * The enforced status workflow. A job may only move one step forward:
      * pending -> in_progress -> completed -> delivered.
@@ -89,7 +93,11 @@ class ServiceJobService
 
         $job->update(['status' => $newStatus]);
 
-        // Feature 5 hook: invoice is auto-created when a job reaches completed.
+        if ($newStatus === ServiceJob::STATUS_COMPLETED) {
+            $this->invoiceService->createForJob($job);
+
+            return ['ok' => true, 'message' => 'Job completed — invoice created.'];
+        }
 
         return ['ok' => true, 'message' => 'Job status updated.'];
     }
