@@ -148,8 +148,8 @@
 ## Feature 6 — Dashboard — `feature/dashboard`
 
 ### Part 6A — API
-- [ ] `GET /api/dashboard` — totals: customers, vehicles, in-service, completed (month), revenue (month, paid invoices) — single `DashboardService`
-- [ ] Recent jobs + jobs-by-status counts in same response
+- [x] `GET /api/dashboard` — totals: customers, vehicles, in-service, completed (month), revenue (month, paid invoices) — single `DashboardService`
+- [x] Recent jobs + jobs-by-status counts in same response
 
 ### Part 6B — Frontend
 - [ ] Stat cards grid (responsive, theme-aware)
@@ -161,7 +161,7 @@
 ## Feature 7 — Master Search — `feature/dashboard` (same branch)
 
 ### Part 7A — API
-- [ ] `GET /api/search?q=` → grouped results (customers, vehicles by reg no, jobs) via `SearchService`
+- [x] `GET /api/search?q=` → grouped results (customers, vehicles by reg no, jobs) via `SearchService`
 
 ### Part 7B — Frontend
 - [ ] Header search bar: debounced dropdown with grouped results → navigate to detail
@@ -172,8 +172,8 @@
 ## Feature 8 — Notifications — `feature/dashboard` (same branch)
 
 ### Part 8A — API
-- [ ] `notifications` table + endpoints: list (paginated), unread count, mark read
-- [ ] Triggers in Services: job assigned (→ mechanic), status changed, invoice paid (→ admin)
+- [x] `notifications` table + endpoints: list (paginated), unread count, mark read
+- [x] Triggers in Services: job assigned (→ mechanic), status changed, invoice paid (→ admin)
 
 ### Part 8B — Frontend
 - [ ] Bell + unread badge in header / app top bar

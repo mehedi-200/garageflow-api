@@ -9,8 +9,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ServiceJobService
 {
-    public function __construct(private readonly InvoiceService $invoiceService)
-    {
+    public function __construct(
+        private readonly InvoiceService $invoiceService,
+        private readonly NotificationService $notificationService,
+    ) {
     }
 
     /**
@@ -51,7 +53,15 @@ class ServiceJobService
     {
         $data['status'] = ServiceJob::STATUS_PENDING;
 
-        return ServiceJob::create($data)->load(['vehicle.customer', 'mechanic']);
+        $job = ServiceJob::create($data)->load(['vehicle.customer', 'mechanic']);
+
+        $this->notificationService->notifyUser(
+            $job->mechanic_id,
+            "New job #{$job->id} ({$job->service_type}) assigned to you — {$job->vehicle->registration_no}.",
+            "/jobs/{$job->id}"
+        );
+
+        return $job;
     }
 
     public function update(ServiceJob $job, array $data): ServiceJob
@@ -92,6 +102,12 @@ class ServiceJobService
         }
 
         $job->update(['status' => $newStatus]);
+
+        $this->notificationService->notifyAdmins(
+            "Job #{$job->id} moved to ".str_replace('_', ' ', $newStatus).'.',
+            "/jobs/{$job->id}",
+            $user->id
+        );
 
         if ($newStatus === ServiceJob::STATUS_COMPLETED) {
             $this->invoiceService->createForJob($job);
