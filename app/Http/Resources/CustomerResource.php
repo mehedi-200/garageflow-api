@@ -15,6 +15,7 @@ class CustomerResource extends JsonResource
             'phone' => $this->phone,
             'email' => $this->email,
             'address' => $this->address,
+            'vehicles' => VehicleResource::collection($this->whenLoaded('vehicles')),
             'created_at' => $this->created_at?->toDateTimeString(),
         ];
     }

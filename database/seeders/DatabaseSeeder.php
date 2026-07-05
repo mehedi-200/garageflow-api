@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Customer;
 use App\Models\User;
+use App\Models\Vehicle;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -27,6 +28,14 @@ class DatabaseSeeder extends Seeder
 
         if (Customer::count() === 0) {
             Customer::factory(15)->create();
+        }
+
+        if (Vehicle::count() === 0) {
+            $customerIds = Customer::pluck('id');
+
+            Vehicle::factory(25)
+                ->state(fn () => ['customer_id' => $customerIds->random()])
+                ->create();
         }
     }
 }
