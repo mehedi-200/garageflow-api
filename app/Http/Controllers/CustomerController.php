@@ -38,7 +38,7 @@ class CustomerController extends Controller
 
     public function show(Customer $customer): JsonResponse
     {
-        return $this->sendSuccess(new CustomerResource($customer));
+        return $this->sendSuccess(new CustomerResource($customer->load('vehicles')));
     }
 
     public function update(UpdateCustomerRequest $request, Customer $customer): JsonResponse

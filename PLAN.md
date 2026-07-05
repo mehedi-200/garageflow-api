@@ -89,9 +89,9 @@
 ## Feature 3 — Vehicles — `feature/vehicle-management`
 
 ### Part 3A — API
-- [ ] Migration + `Vehicle` model (`customer_id`, unique `registration_no`, brand, model, year, notes)
-- [ ] `apiResource /api/vehicles` + `VehicleService` + `VehicleResource` + Form Requests
-- [ ] Filter by customer, search by registration number, pagination
+- [x] Migration + `Vehicle` model (`customer_id`, unique `registration_no`, brand, model, year, notes)
+- [x] `apiResource /api/vehicles` + `VehicleService` + `VehicleResource` + Form Requests
+- [x] Filter by customer, search by registration number, pagination
 
 ### Part 3B — Frontend: list & filter
 - [ ] Vehicles page (Table/cards) + customer filter + search + Pagination
