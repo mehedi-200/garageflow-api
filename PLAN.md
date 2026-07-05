@@ -66,10 +66,10 @@
 ## Feature 2 — Customers — `feature/customer-management`
 
 ### Part 2A — API
-- [ ] Migration + `Customer` model (soft deletes), factory
-- [ ] `apiResource /api/customers` — thin controller → `CustomerService` → `CustomerResource`
-- [ ] `StoreCustomerRequest` / `UpdateCustomerRequest`
-- [ ] Search (`?q=` name/phone) + paginated index
+- [x] Migration + `Customer` model (soft deletes), factory
+- [x] `apiResource /api/customers` — thin controller → `CustomerService` → `CustomerResource`
+- [x] `StoreCustomerRequest` / `UpdateCustomerRequest`
+- [x] Search (`?q=` name/phone) + paginated index
 
 ### Part 2B — Frontend: list
 - [ ] Customers page: Table on desktop / cards on mobile

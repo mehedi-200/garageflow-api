@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -23,5 +24,9 @@ class DatabaseSeeder extends Seeder
                 'role' => 'admin',
             ]
         );
+
+        if (Customer::count() === 0) {
+            Customer::factory(15)->create();
+        }
     }
 }
