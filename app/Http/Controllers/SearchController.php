@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CustomerResource;
+use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\ServiceJobResource;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\VehicleResource;
 use App\Services\SearchService;
 use App\Traits\ApiResponse;
@@ -23,7 +25,9 @@ class SearchController extends Controller
         $term = trim((string) $request->query('q', ''));
 
         if ($term === '') {
-            return $this->sendSuccess(['customers' => [], 'vehicles' => [], 'jobs' => []]);
+            return $this->sendSuccess([
+                'customers' => [], 'vehicles' => [], 'jobs' => [], 'invoices' => [], 'mechanics' => [],
+            ]);
         }
 
         $results = $this->searchService->search($term, $request->user());
@@ -32,6 +36,8 @@ class SearchController extends Controller
             'customers' => CustomerResource::collection($results['customers']),
             'vehicles' => VehicleResource::collection($results['vehicles']),
             'jobs' => ServiceJobResource::collection($results['jobs']),
+            'invoices' => InvoiceResource::collection($results['invoices']),
+            'mechanics' => UserResource::collection($results['mechanics']),
         ]);
     }
 }
