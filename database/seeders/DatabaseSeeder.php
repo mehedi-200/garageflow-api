@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Customer;
+use App\Models\Invoice;
 use App\Models\ServiceJob;
+use App\Services\InvoiceService;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -76,6 +78,24 @@ class DatabaseSeeder extends Seeder
                             'cost' => fake()->numberBetween(300, 8000),
                         ]);
                     }
+                }
+            }
+        }
+
+        if (Invoice::count() === 0) {
+            $invoiceService = app(InvoiceService::class);
+
+            $billableJobs = ServiceJob::whereIn('status', [
+                ServiceJob::STATUS_COMPLETED,
+                ServiceJob::STATUS_DELIVERED,
+            ])->get();
+
+            foreach ($billableJobs as $job) {
+                $invoice = $invoiceService->createForJob($job);
+                $invoiceService->updateLabor($invoice, fake()->numberBetween(500, 5000));
+
+                if (fake()->boolean(60)) {
+                    $invoiceService->markPaid($invoice);
                 }
             }
         }

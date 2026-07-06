@@ -45,7 +45,7 @@ class ServiceJobController extends Controller
         }
 
         return $this->sendSuccess(
-            new ServiceJobResource($serviceJob->load(['vehicle.customer', 'mechanic', 'items']))
+            new ServiceJobResource($serviceJob->load(['vehicle.customer', 'mechanic', 'items', 'invoice']))
         );
     }
 

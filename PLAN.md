@@ -133,10 +133,10 @@
 ## Feature 5 — Invoices — `feature/invoice`
 
 ### Part 5A — API
-- [ ] Migration: `invoices` (job_id, invoice_no, labor_cost, parts_cost, total, payment_status, paid_at)
-- [ ] Auto-create on job → Completed (in `ServiceJobService`), `InvoiceService` computes totals server-side
-- [ ] Invoice number generator `INV-YYYY-NNNN`
-- [ ] `PATCH /api/invoices/{id}/pay` + paginated index + `InvoiceResource`
+- [x] Migration: `invoices` (job_id, invoice_no, labor_cost, parts_cost, total, payment_status, paid_at)
+- [x] Auto-create on job → Completed (in `ServiceJobService`), `InvoiceService` computes totals server-side
+- [x] Invoice number generator `INV-YYYY-NNNN`
+- [x] `PATCH /api/invoices/{id}/pay` + paginated index + `InvoiceResource`
 
 ### Part 5B — Frontend
 - [ ] Invoices page: list + payment status filter + Pagination
