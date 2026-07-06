@@ -31,8 +31,6 @@ class ServiceJobService
     {
         return ServiceJob::query()
             ->with(['vehicle.customer', 'mechanic'])
-            // Mechanics only ever see their own jobs.
-            ->when($user->role === 'mechanic', fn ($q) => $q->where('mechanic_id', $user->id))
             ->when($filters['status'] ?? null, fn ($q, $status) => $q->where('status', $status))
             ->when($filters['mechanic_id'] ?? null, fn ($q, $id) => $q->where('mechanic_id', $id))
             ->when($filters['vehicle_id'] ?? null, fn ($q, $id) => $q->where('vehicle_id', $id))
@@ -76,15 +74,7 @@ class ServiceJobService
      */
     public function changeStatus(ServiceJob $job, string $newStatus, User $user): array
     {
-        if ($user->role === 'mechanic' && $job->mechanic_id !== $user->id) {
-            return ['ok' => false, 'message' => 'You can only update your own jobs.'];
-        }
-
         if ($newStatus === ServiceJob::STATUS_CANCELLED) {
-            if ($user->role !== 'admin') {
-                return ['ok' => false, 'message' => 'Only an admin can cancel a job.'];
-            }
-
             if ($job->status === ServiceJob::STATUS_DELIVERED) {
                 return ['ok' => false, 'message' => 'A delivered job cannot be cancelled.'];
             }
@@ -123,10 +113,6 @@ class ServiceJobService
      */
     public function addItem(ServiceJob $job, array $data, User $user): array
     {
-        if ($user->role === 'mechanic' && $job->mechanic_id !== $user->id) {
-            return ['ok' => false, 'message' => 'You can only update your own jobs.'];
-        }
-
         if ($job->status !== ServiceJob::STATUS_IN_PROGRESS) {
             return ['ok' => false, 'message' => 'Items can only be added while the job is in progress.'];
         }
@@ -141,10 +127,6 @@ class ServiceJobService
      */
     public function removeItem(ServiceJob $job, ServiceItem $item, User $user): array
     {
-        if ($user->role === 'mechanic' && $job->mechanic_id !== $user->id) {
-            return ['ok' => false, 'message' => 'You can only update your own jobs.'];
-        }
-
         if ($job->status !== ServiceJob::STATUS_IN_PROGRESS) {
             return ['ok' => false, 'message' => 'Items can only be removed while the job is in progress.'];
         }

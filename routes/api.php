@@ -28,21 +28,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
     Route::patch('/notifications/read-all', [NotificationController::class, 'markAllRead']);
 
-    Route::apiResource('customers', CustomerController::class)->only(['index', 'show']);
-    Route::apiResource('vehicles', VehicleController::class)->only(['index', 'show']);
+    // All authenticated users share full access (owner's decision, 2026-07-06).
+    Route::apiResource('mechanics', UserController::class)->except(['show']);
+    Route::apiResource('customers', CustomerController::class);
+    Route::apiResource('vehicles', VehicleController::class);
 
-    Route::apiResource('service-jobs', ServiceJobController::class)->only(['index', 'show']);
+    Route::apiResource('service-jobs', ServiceJobController::class)->except(['destroy']);
     Route::patch('/service-jobs/{service_job}/status', [ServiceJobController::class, 'updateStatus']);
     Route::post('/service-jobs/{service_job}/items', [ServiceItemController::class, 'store']);
     Route::delete('/service-jobs/{service_job}/items/{item}', [ServiceItemController::class, 'destroy']);
 
-    Route::middleware('role:admin')->group(function () {
-        Route::apiResource('mechanics', UserController::class)->except(['show']);
-        Route::apiResource('customers', CustomerController::class)->except(['index', 'show']);
-        Route::apiResource('vehicles', VehicleController::class)->except(['index', 'show']);
-        Route::apiResource('service-jobs', ServiceJobController::class)->only(['store', 'update']);
-
-        Route::apiResource('invoices', InvoiceController::class)->only(['index', 'show', 'update']);
-        Route::patch('/invoices/{invoice}/pay', [InvoiceController::class, 'pay']);
-    });
+    Route::apiResource('invoices', InvoiceController::class)->only(['index', 'show', 'update']);
+    Route::patch('/invoices/{invoice}/pay', [InvoiceController::class, 'pay']);
 });

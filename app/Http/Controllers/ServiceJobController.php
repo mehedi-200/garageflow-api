@@ -40,10 +40,6 @@ class ServiceJobController extends Controller
 
     public function show(Request $request, ServiceJob $serviceJob): JsonResponse
     {
-        if ($request->user()->role === 'mechanic' && $serviceJob->mechanic_id !== $request->user()->id) {
-            return $this->sendError('You can only view your own jobs.', 403);
-        }
-
         return $this->sendSuccess(
             new ServiceJobResource($serviceJob->load(['vehicle.customer', 'mechanic', 'items', 'invoice']))
         );

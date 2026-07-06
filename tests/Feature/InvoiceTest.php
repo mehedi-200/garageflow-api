@@ -85,10 +85,10 @@ class InvoiceTest extends TestCase
         $this->assertSame("INV-{$year}-0002", $numbers[1]);
     }
 
-    public function test_mechanic_cannot_access_invoices(): void
+    public function test_mechanic_can_access_invoices(): void
     {
         Sanctum::actingAs(User::factory()->create(['role' => 'mechanic']));
 
-        $this->getJson('/api/invoices')->assertStatus(403);
+        $this->getJson('/api/invoices')->assertOk();
     }
 }
