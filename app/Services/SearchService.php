@@ -25,7 +25,6 @@ class SearchService
             ->get();
 
         $jobs = ServiceJob::with(['vehicle.customer', 'mechanic'])
-            ->when($user->role === 'mechanic', fn ($q) => $q->where('mechanic_id', $user->id))
             ->where(function ($q) use ($term) {
                 if (ctype_digit($term)) {
                     $q->where('id', (int) $term);

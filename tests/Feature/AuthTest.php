@@ -45,13 +45,13 @@ class AuthTest extends TestCase
             ->assertJsonPath('success', false);
     }
 
-    public function test_mechanic_cannot_access_admin_routes(): void
+    public function test_any_authenticated_user_can_access_all_resources(): void
     {
         Sanctum::actingAs(User::factory()->create(['role' => 'mechanic']));
 
-        $this->getJson('/api/mechanics')
-            ->assertStatus(403)
-            ->assertJsonPath('success', false);
+        $this->getJson('/api/mechanics')->assertOk();
+        $this->getJson('/api/customers')->assertOk();
+        $this->getJson('/api/invoices')->assertOk();
     }
 
     public function test_admin_can_create_mechanic_account(): void
