@@ -196,7 +196,7 @@
 
 ### Part 9C — Release
 - [ ] README screenshots (desktop + mobile, all 3 themes)
-- [ ] Final review, merge `develop` → `main`, tag `v1.0.0`
+- [x] Final review, merge `develop` → `main`, tag `v1.0.0`
 
 ---
 
