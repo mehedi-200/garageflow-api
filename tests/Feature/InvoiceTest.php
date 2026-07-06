@@ -18,7 +18,7 @@ class InvoiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->admin = User::factory()->create(['role' => 'admin']);
+        $this->admin = $this->superAdmin();
         Sanctum::actingAs($this->admin);
     }
 
@@ -85,10 +85,12 @@ class InvoiceTest extends TestCase
         $this->assertSame("INV-{$year}-0002", $numbers[1]);
     }
 
-    public function test_mechanic_can_access_invoices(): void
+    public function test_invoices_require_the_invoices_permission(): void
     {
-        Sanctum::actingAs(User::factory()->create(['role' => 'mechanic']));
+        Sanctum::actingAs($this->userWithPermissions(['vehicles']));
+        $this->getJson('/api/invoices')->assertStatus(403);
 
+        Sanctum::actingAs($this->userWithPermissions(['invoices']));
         $this->getJson('/api/invoices')->assertOk();
     }
 }

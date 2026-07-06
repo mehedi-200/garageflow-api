@@ -21,7 +21,7 @@ class AuthService
         }
 
         return [
-            'user' => $user,
+            'user' => $user->load('role.permissions'),
             'token' => $user->createToken('auth')->plainTextToken,
         ];
     }

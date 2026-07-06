@@ -17,7 +17,7 @@ class ServiceJobStatusTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->admin = User::factory()->create(['role' => 'admin']);
+        $this->admin = $this->superAdmin();
     }
 
     private function patchStatus(ServiceJob $job, string $status)
@@ -60,14 +60,14 @@ class ServiceJobStatusTest extends TestCase
     public function test_any_user_can_advance_any_job(): void
     {
         $job = ServiceJob::factory()->create();
-        Sanctum::actingAs(User::factory()->create(['role' => 'mechanic']));
+        Sanctum::actingAs($this->userWithPermissions(['service_jobs']));
 
         $this->patchStatus($job, 'in_progress')->assertOk();
     }
 
     public function test_any_user_can_cancel_but_not_after_delivery(): void
     {
-        $mechanic = User::factory()->create(['role' => 'mechanic']);
+        $mechanic = $this->userWithPermissions(['service_jobs']);
         $job = ServiceJob::factory()->create();
         Sanctum::actingAs($mechanic);
 
@@ -93,7 +93,7 @@ class ServiceJobStatusTest extends TestCase
 
     public function test_all_users_see_all_jobs(): void
     {
-        $mechanic = User::factory()->create(['role' => 'mechanic']);
+        $mechanic = $this->userWithPermissions(['service_jobs']);
         ServiceJob::factory()->count(2)->create(['mechanic_id' => $mechanic->id]);
         ServiceJob::factory()->count(3)->create();
 

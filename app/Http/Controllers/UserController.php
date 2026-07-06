@@ -21,34 +21,40 @@ class UserController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $mechanics = $this->userService->paginatedMechanics(
+        $users = $this->userService->paginatedUsers(
             $request->query('q'),
             (int) $request->query('per_page', 10)
         );
 
-        return $this->sendSuccess(UserResource::collection($mechanics)->response()->getData(true));
+        return $this->sendSuccess(UserResource::collection($users)->response()->getData(true));
     }
 
     public function store(StoreUserRequest $request): JsonResponse
     {
-        $mechanic = $this->userService->createMechanic($request->validated());
+        $user = $this->userService->createUser($request->validated());
 
-        return $this->sendSuccess(new UserResource($mechanic), 'Mechanic created successfully.', 201);
+        return $this->sendSuccess(new UserResource($user), 'User created successfully.', 201);
     }
 
-    public function update(UpdateUserRequest $request, User $mechanic): JsonResponse
+    public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
-        $mechanic = $this->userService->updateMechanic($mechanic, $request->validated());
+        $result = $this->userService->updateUser($user, $request->validated());
 
-        return $this->sendSuccess(new UserResource($mechanic), 'Mechanic updated successfully.');
-    }
-
-    public function destroy(User $mechanic): JsonResponse
-    {
-        if (! $this->userService->deleteMechanic($mechanic)) {
-            return $this->sendError('Only mechanic accounts can be deleted.', 422);
+        if (! $result['ok']) {
+            return $this->sendError($result['message'], 422);
         }
 
-        return $this->sendSuccess(null, 'Mechanic deleted successfully.');
+        return $this->sendSuccess(new UserResource($result['user']), $result['message']);
+    }
+
+    public function destroy(User $user): JsonResponse
+    {
+        $result = $this->userService->deleteUser($user);
+
+        if (! $result['ok']) {
+            return $this->sendError($result['message'], 422);
+        }
+
+        return $this->sendSuccess(null, $result['message']);
     }
 }

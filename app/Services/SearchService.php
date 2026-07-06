@@ -56,11 +56,10 @@ class SearchService
                 ->limit(self::LIMIT)
                 ->get(),
 
-            'mechanics' => User::where('role', 'mechanic')
-                ->where(function ($q) use ($term) {
-                    $q->where('name', 'like', "%{$term}%")
-                        ->orWhere('email', 'like', "%{$term}%");
-                })->limit(self::LIMIT)->get(),
+            'users' => User::where(function ($q) use ($term) {
+                $q->where('name', 'like', "%{$term}%")
+                    ->orWhere('email', 'like', "%{$term}%");
+            })->limit(self::LIMIT)->get(),
         ];
     }
 }

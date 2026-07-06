@@ -18,7 +18,7 @@ class ServiceJobFactory extends Factory
     {
         return [
             'vehicle_id' => Vehicle::factory(),
-            'mechanic_id' => User::factory()->state(['role' => 'mechanic']),
+            'mechanic_id' => User::factory(),
             'service_type' => fake()->randomElement(ServiceJob::SERVICE_TYPES),
             'status' => ServiceJob::STATUS_PENDING,
             'description' => fake()->optional()->sentence(),

@@ -18,12 +18,13 @@ class UserService
 
         $user->save();
 
-        return $user;
+        return $user->load('role.permissions');
     }
 
-    public function paginatedMechanics(?string $search, int $perPage = 10): LengthAwarePaginator
+    public function paginatedUsers(?string $search, int $perPage = 10): LengthAwarePaginator
     {
-        return User::where('role', 'mechanic')
+        return User::query()
+            ->with('role.permissions')
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -34,39 +35,51 @@ class UserService
             ->paginate($perPage);
     }
 
-    public function createMechanic(array $data): User
+    public function createUser(array $data): User
     {
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => $data['password'],
-            'role' => 'mechanic',
-        ]);
+            'role_id' => $data['role_id'],
+            'is_admin' => false,
+        ])->load('role.permissions');
     }
 
-    public function updateMechanic(User $mechanic, array $data): User
+    /**
+     * @return array{ok: bool, message: string, user?: User}
+     */
+    public function updateUser(User $user, array $data): array
     {
-        $mechanic->name = $data['name'];
-        $mechanic->email = $data['email'];
+        if ($user->is_admin) {
+            return ['ok' => false, 'message' => 'Super admin accounts cannot be edited here.'];
+        }
+
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->role_id = $data['role_id'];
 
         if (! empty($data['password'])) {
-            $mechanic->password = $data['password'];
+            $user->password = $data['password'];
         }
 
-        $mechanic->save();
+        $user->save();
 
-        return $mechanic;
+        return ['ok' => true, 'message' => 'User updated successfully.', 'user' => $user->load('role.permissions')];
     }
 
-    public function deleteMechanic(User $mechanic): bool
+    /**
+     * @return array{ok: bool, message: string}
+     */
+    public function deleteUser(User $user): array
     {
-        if ($mechanic->role !== 'mechanic') {
-            return false;
+        if ($user->is_admin) {
+            return ['ok' => false, 'message' => 'Super admin accounts cannot be deleted.'];
         }
 
-        $mechanic->tokens()->delete();
-        $mechanic->delete();
+        $user->tokens()->delete();
+        $user->delete();
 
-        return true;
+        return ['ok' => true, 'message' => 'User deleted successfully.'];
     }
 }

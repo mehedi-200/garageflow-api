@@ -14,7 +14,7 @@ class CustomerTest extends TestCase
 
     private function actingAsAdmin(): User
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        $admin = $this->superAdmin();
         Sanctum::actingAs($admin);
 
         return $admin;
@@ -41,9 +41,9 @@ class CustomerTest extends TestCase
             ->assertJsonValidationErrors(['name', 'phone']);
     }
 
-    public function test_mechanic_can_also_create_customer(): void
+    public function test_user_with_customers_permission_can_create_customer(): void
     {
-        Sanctum::actingAs(User::factory()->create(['role' => 'mechanic']));
+        Sanctum::actingAs($this->userWithPermissions(['customers']));
 
         $this->postJson('/api/customers', [
             'name' => 'Created By Mechanic',

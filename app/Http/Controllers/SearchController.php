@@ -26,7 +26,7 @@ class SearchController extends Controller
 
         if ($term === '') {
             return $this->sendSuccess([
-                'customers' => [], 'vehicles' => [], 'jobs' => [], 'invoices' => [], 'mechanics' => [],
+                'customers' => [], 'vehicles' => [], 'jobs' => [], 'invoices' => [], 'users' => [],
             ]);
         }
 
@@ -37,7 +37,7 @@ class SearchController extends Controller
             'vehicles' => VehicleResource::collection($results['vehicles']),
             'jobs' => ServiceJobResource::collection($results['jobs']),
             'invoices' => InvoiceResource::collection($results['invoices']),
-            'mechanics' => UserResource::collection($results['mechanics']),
+            'users' => UserResource::collection($results['users']),
         ]);
     }
 }
