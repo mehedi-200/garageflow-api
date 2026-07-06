@@ -17,11 +17,7 @@ class UpdateServiceJobRequest extends FormRequest
     {
         return [
             'vehicle_id' => ['required', 'integer', 'exists:vehicles,id'],
-            'mechanic_id' => [
-                'required',
-                'integer',
-                Rule::exists('users', 'id')->where('role', 'mechanic'),
-            ],
+            'mechanic_id' => ['required', 'integer', 'exists:users,id'],
             'service_type' => ['required', Rule::in(ServiceJob::SERVICE_TYPES)],
             'description' => ['nullable', 'string', 'max:2000'],
             'expected_delivery' => ['nullable', 'date'],

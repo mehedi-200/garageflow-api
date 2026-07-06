@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Middleware\EnsureRole;
+use App\Http\Middleware\EnsurePermission;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
@@ -18,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'role' => EnsureRole::class,
+            'permission' => EnsurePermission::class,
         ]);
 
         // API-only app: never redirect guests, always answer JSON.

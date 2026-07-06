@@ -38,7 +38,7 @@ class NotificationService
 
     public function notifyAdmins(string $message, ?string $link = null, ?int $exceptUserId = null): void
     {
-        User::where('role', 'admin')
+        User::where('is_admin', true)
             ->when($exceptUserId, fn ($q) => $q->where('id', '!=', $exceptUserId))
             ->pluck('id')
             ->each(fn ($id) => $this->notifyUser($id, $message, $link));

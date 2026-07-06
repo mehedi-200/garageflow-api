@@ -4,10 +4,12 @@ namespace Database\Seeders;
 
 use App\Models\Customer;
 use App\Models\Invoice;
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\ServiceJob;
-use App\Services\InvoiceService;
 use App\Models\User;
 use App\Models\Vehicle;
+use App\Services\InvoiceService;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -20,14 +22,45 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Permissions (one per feature)
+        foreach (Permission::FEATURES as $name => $label) {
+            Permission::firstOrCreate(['name' => $name], ['label' => $label]);
+        }
+
+        // Default roles
+        $manager = Role::firstOrCreate(['name' => 'Manager']);
+        $manager->permissions()->sync(
+            Permission::whereIn('name', ['customers', 'vehicles', 'service_jobs', 'invoices'])->pluck('id')
+        );
+
+        $mechanic = Role::firstOrCreate(['name' => 'Mechanic']);
+        $mechanic->permissions()->sync(
+            Permission::whereIn('name', ['vehicles', 'service_jobs'])->pluck('id')
+        );
+
+        // Main super admin — is_admin bypasses all permission checks
         User::firstOrCreate(
             ['email' => 'admin@garageflow.test'],
             [
                 'name' => 'Admin',
                 'password' => 'password',
-                'role' => 'admin',
             ]
-        );
+        )->update(['is_admin' => true, 'role_id' => null]);
+
+        User::firstOrCreate(
+            ['email' => 'jakir@garageflow.test'],
+            ['name' => 'Jakir Mechanic', 'password' => 'password123']
+        )->update(['role_id' => $mechanic->id, 'is_admin' => false]);
+
+        User::firstOrCreate(
+            ['email' => 'rafiq@garageflow.test'],
+            ['name' => 'Rafiq Mechanic', 'password' => 'password123']
+        )->update(['role_id' => $mechanic->id, 'is_admin' => false]);
+
+        User::firstOrCreate(
+            ['email' => 'manager@garageflow.test'],
+            ['name' => 'Salma Manager', 'password' => 'password123']
+        )->update(['role_id' => $manager->id, 'is_admin' => false]);
 
         if (Customer::count() === 0) {
             Customer::factory(15)->create();
@@ -41,14 +74,9 @@ class DatabaseSeeder extends Seeder
                 ->create();
         }
 
-        User::firstOrCreate(
-            ['email' => 'rafiq@garageflow.test'],
-            ['name' => 'Rafiq Mechanic', 'password' => 'password123', 'role' => 'mechanic']
-        );
-
         if (ServiceJob::count() === 0) {
             $vehicleIds = Vehicle::pluck('id');
-            $mechanicIds = User::where('role', 'mechanic')->pluck('id');
+            $mechanicIds = User::where('role_id', $mechanic->id)->pluck('id');
             $statuses = [
                 ServiceJob::STATUS_PENDING,
                 ServiceJob::STATUS_IN_PROGRESS,

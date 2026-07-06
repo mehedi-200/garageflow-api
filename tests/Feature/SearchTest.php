@@ -17,7 +17,7 @@ class SearchTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Sanctum::actingAs(User::factory()->create(['role' => 'admin']));
+        Sanctum::actingAs($this->superAdmin());
     }
 
     public function test_search_finds_vehicles_by_brand(): void
@@ -31,7 +31,7 @@ class SearchTest extends TestCase
 
     public function test_search_finds_jobs_by_service_type_and_mechanic_name(): void
     {
-        $mechanic = User::factory()->create(['role' => 'mechanic', 'name' => 'Karim Mechanic']);
+        $mechanic = User::factory()->create(['name' => 'Karim Mechanic']);
         ServiceJob::factory()->create(['service_type' => 'Bodywork', 'mechanic_id' => $mechanic->id]);
 
         $this->getJson('/api/search?q=Bodywork')->assertOk()
@@ -39,7 +39,7 @@ class SearchTest extends TestCase
         $this->getJson('/api/search?q=Karim')->assertOk()
             ->assertJsonPath('data.jobs.0.mechanic.name', 'Karim Mechanic');
         $this->getJson('/api/search?q=Karim')->assertOk()
-            ->assertJsonPath('data.mechanics.0.name', 'Karim Mechanic');
+            ->assertJsonPath('data.users.0.name', 'Karim Mechanic');
     }
 
     public function test_search_finds_invoices_by_number(): void
