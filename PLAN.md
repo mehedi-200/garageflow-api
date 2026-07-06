@@ -185,13 +185,13 @@
 ## Feature 9 — Quality & Release — `refactor/*` → `main`
 
 ### Part 9A — Tests (API)
-- [ ] Auth: login, role access
-- [ ] Status machine: every valid + invalid transition
-- [ ] Invoice totals math
-- [ ] Customer/vehicle CRUD + validation
+- [x] Auth: login, role access
+- [x] Status machine: every valid + invalid transition
+- [x] Invoice totals math
+- [x] Customer/vehicle CRUD + validation
 
 ### Part 9B — CI & data
-- [ ] GitHub Actions: run tests on push/PR + README badges
+- [x] GitHub Actions: run tests on push/PR + README badges
 - [ ] Seeders: 1 admin, 2 mechanics, ~15 customers, ~25 vehicles, ~40 jobs (all statuses), invoices
 
 ### Part 9C — Release

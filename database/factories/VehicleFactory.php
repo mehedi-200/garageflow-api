@@ -27,6 +27,7 @@ class VehicleFactory extends Factory
         $brand = fake()->randomElement(array_keys($brands));
 
         return [
+            'customer_id' => \App\Models\Customer::factory(),
             'registration_no' => strtoupper(fake()->unique()->bothify('DHA-##-####')),
             'brand' => $brand,
             'model' => fake()->randomElement($brands[$brand]),
