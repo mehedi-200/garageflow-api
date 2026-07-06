@@ -57,33 +57,24 @@ class ServiceJobStatusTest extends TestCase
         $this->patchStatus($job, 'pending')->assertStatus(422);
     }
 
-    public function test_mechanic_cannot_update_someone_elses_job(): void
+    public function test_any_user_can_advance_any_job(): void
     {
         $job = ServiceJob::factory()->create();
         Sanctum::actingAs(User::factory()->create(['role' => 'mechanic']));
 
-        $this->patchStatus($job, 'in_progress')->assertStatus(422);
-    }
-
-    public function test_assigned_mechanic_can_advance_own_job(): void
-    {
-        $mechanic = User::factory()->create(['role' => 'mechanic']);
-        $job = ServiceJob::factory()->create(['mechanic_id' => $mechanic->id]);
-        Sanctum::actingAs($mechanic);
-
         $this->patchStatus($job, 'in_progress')->assertOk();
     }
 
-    public function test_only_admin_can_cancel(): void
+    public function test_any_user_can_cancel_but_not_after_delivery(): void
     {
         $mechanic = User::factory()->create(['role' => 'mechanic']);
-        $job = ServiceJob::factory()->create(['mechanic_id' => $mechanic->id]);
-
+        $job = ServiceJob::factory()->create();
         Sanctum::actingAs($mechanic);
-        $this->patchStatus($job, 'cancelled')->assertStatus(422);
 
-        Sanctum::actingAs($this->admin);
         $this->patchStatus($job, 'cancelled')->assertOk();
+
+        $delivered = ServiceJob::factory()->create(['status' => 'delivered']);
+        $this->patchStatus($delivered, 'cancelled')->assertStatus(422);
     }
 
     public function test_items_can_only_be_added_while_in_progress(): void
@@ -100,7 +91,7 @@ class ServiceJobStatusTest extends TestCase
             ->assertStatus(201);
     }
 
-    public function test_mechanics_only_see_their_own_jobs(): void
+    public function test_all_users_see_all_jobs(): void
     {
         $mechanic = User::factory()->create(['role' => 'mechanic']);
         ServiceJob::factory()->count(2)->create(['mechanic_id' => $mechanic->id]);
@@ -110,6 +101,6 @@ class ServiceJobStatusTest extends TestCase
 
         $this->getJson('/api/service-jobs')
             ->assertOk()
-            ->assertJsonPath('data.meta.total', 2);
+            ->assertJsonPath('data.meta.total', 5);
     }
 }

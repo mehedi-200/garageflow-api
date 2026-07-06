@@ -41,14 +41,14 @@ class CustomerTest extends TestCase
             ->assertJsonValidationErrors(['name', 'phone']);
     }
 
-    public function test_mechanic_cannot_create_customer(): void
+    public function test_mechanic_can_also_create_customer(): void
     {
         Sanctum::actingAs(User::factory()->create(['role' => 'mechanic']));
 
         $this->postJson('/api/customers', [
-            'name' => 'X',
-            'phone' => '018',
-        ])->assertStatus(403);
+            'name' => 'Created By Mechanic',
+            'phone' => '01812345678',
+        ])->assertStatus(201);
     }
 
     public function test_customers_can_be_searched_by_name(): void
