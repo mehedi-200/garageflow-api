@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\DB;
 
 class InvoiceService
 {
+    public function __construct(private readonly NotificationService $notificationService)
+    {
+    }
+
     public function paginated(array $filters, int $perPage = 10): LengthAwarePaginator
     {
         return Invoice::query()
@@ -69,6 +73,11 @@ class InvoiceService
             'payment_status' => Invoice::STATUS_PAID,
             'paid_at' => now(),
         ]);
+
+        $this->notificationService->notifyAdmins(
+            "Invoice {$invoice->invoice_no} was paid (".number_format((float) $invoice->total).').',
+            "/invoices/{$invoice->id}"
+        );
 
         return ['ok' => true, 'message' => 'Invoice marked as paid.'];
     }

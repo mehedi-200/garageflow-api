@@ -148,8 +148,8 @@
 ## Feature 6 — Dashboard — `feature/dashboard`
 
 ### Part 6A — API
-- [ ] `GET /api/dashboard` — totals: customers, vehicles, in-service, completed (month), revenue (month, paid invoices) — single `DashboardService`
-- [ ] Recent jobs + jobs-by-status counts in same response
+- [x] `GET /api/dashboard` — totals: customers, vehicles, in-service, completed (month), revenue (month, paid invoices) — single `DashboardService`
+- [x] Recent jobs + jobs-by-status counts in same response
 
 ### Part 6B — Frontend
 - [ ] Stat cards grid (responsive, theme-aware)
@@ -161,7 +161,7 @@
 ## Feature 7 — Master Search — `feature/dashboard` (same branch)
 
 ### Part 7A — API
-- [ ] `GET /api/search?q=` → grouped results (customers, vehicles by reg no, jobs) via `SearchService`
+- [x] `GET /api/search?q=` → grouped results (customers, vehicles by reg no, jobs) via `SearchService`
 
 ### Part 7B — Frontend
 - [ ] Header search bar: debounced dropdown with grouped results → navigate to detail
@@ -172,8 +172,8 @@
 ## Feature 8 — Notifications — `feature/dashboard` (same branch)
 
 ### Part 8A — API
-- [ ] `notifications` table + endpoints: list (paginated), unread count, mark read
-- [ ] Triggers in Services: job assigned (→ mechanic), status changed, invoice paid (→ admin)
+- [x] `notifications` table + endpoints: list (paginated), unread count, mark read
+- [x] Triggers in Services: job assigned (→ mechanic), status changed, invoice paid (→ admin)
 
 ### Part 8B — Frontend
 - [ ] Bell + unread badge in header / app top bar
@@ -185,13 +185,13 @@
 ## Feature 9 — Quality & Release — `refactor/*` → `main`
 
 ### Part 9A — Tests (API)
-- [ ] Auth: login, role access
-- [ ] Status machine: every valid + invalid transition
-- [ ] Invoice totals math
-- [ ] Customer/vehicle CRUD + validation
+- [x] Auth: login, role access
+- [x] Status machine: every valid + invalid transition
+- [x] Invoice totals math
+- [x] Customer/vehicle CRUD + validation
 
 ### Part 9B — CI & data
-- [ ] GitHub Actions: run tests on push/PR + README badges
+- [x] GitHub Actions: run tests on push/PR + README badges
 - [ ] Seeders: 1 admin, 2 mechanics, ~15 customers, ~25 vehicles, ~40 jobs (all statuses), invoices
 
 ### Part 9C — Release
